@@ -3,9 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
+//importwall
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.kauailabs.navx.frc.AHRS;
 import com.swervedrivespecialties.swervelib.Mk3SwerveModuleHelper;
+import com.swervedrivespecialties.swervelib.Mk4SwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -17,6 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
+
 
 import static frc.robot.Constants.*;
 
@@ -38,9 +42,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 6380.0 / 60.0 *
-          SdsModuleConfigurations.MK3_STANDARD.getDriveReduction() *
-          SdsModuleConfigurations.MK3_STANDARD.getWheelDiameter() * Math.PI;
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 5880.0 / 60.0 / 
+        SdsModuleConfigurations.MK4_L2.getDriveReduction() * 
+        SdsModuleConfigurations.MK4_L2.getWheelDiameter() * 
+        Math.PI;
   /**
    * The maximum angular velocity of the robot in radians per second.
    * <p>
@@ -65,9 +70,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // The important thing about how you configure your gyroscope is that rotating the robot counter-clockwise should
   // cause the angle reading to increase until it wraps back over to zero.
   // FIXME Remove if you are using a Pigeon
-  private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
+//   private final PigeonIMU m_pigeon = new PigeonIMU(DRIVETRAIN_PIGEON_ID);
   // FIXME Uncomment if you are using a NavX
-//  private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
+ private final AHRS m_navx = new AHRS(SPI.Port.kMXP, (byte) 200); // NavX connected over MXP
 
   // These are our modules. We initialize them in the constructor.
   private final SwerveModule m_frontLeftModule;
@@ -100,13 +105,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // By default we will use Falcon 500s in standard configuration. But if you use a different configuration or motors
     // you MUST change it. If you do not, your code will crash on startup.
     // FIXME Setup motor configuration
-    m_frontLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+    m_frontLeftModule = Mk4SwerveModuleHelper.createNeo(
             // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(0, 0),
             // This can either be STANDARD or FAST depending on your gear configuration
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             // This is the ID of the drive motor
             FRONT_LEFT_MODULE_DRIVE_MOTOR,
             // This is the ID of the steer motor
