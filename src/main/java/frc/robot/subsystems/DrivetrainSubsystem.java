@@ -123,33 +123,34 @@ public class DrivetrainSubsystem extends SubsystemBase {
     );
 
     // We will do the same for the other modules
-    m_frontRightModule = Mk3SwerveModuleHelper.createFalcon500(
+    // We have MK4 L2 SDS Swerve Modules
+    m_frontRightModule = Mk4SwerveModuleHelper.createNeo(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(2, 0),
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             FRONT_RIGHT_MODULE_DRIVE_MOTOR,
             FRONT_RIGHT_MODULE_STEER_MOTOR,
             FRONT_RIGHT_MODULE_STEER_ENCODER,
             FRONT_RIGHT_MODULE_STEER_OFFSET
     );
 
-    m_backLeftModule = Mk3SwerveModuleHelper.createFalcon500(
+    m_backLeftModule = Mk4SwerveModuleHelper.createNeo(
             tab.getLayout("Back Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(4, 0),
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             BACK_LEFT_MODULE_DRIVE_MOTOR,
             BACK_LEFT_MODULE_STEER_MOTOR,
             BACK_LEFT_MODULE_STEER_ENCODER,
             BACK_LEFT_MODULE_STEER_OFFSET
     );
 
-    m_backRightModule = Mk3SwerveModuleHelper.createFalcon500(
+    m_backRightModule = Mk4SwerveModuleHelper.createNeo(
             tab.getLayout("Back Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(6, 0),
-            Mk3SwerveModuleHelper.GearRatio.STANDARD,
+            Mk4SwerveModuleHelper.GearRatio.L2,
             BACK_RIGHT_MODULE_DRIVE_MOTOR,
             BACK_RIGHT_MODULE_STEER_MOTOR,
             BACK_RIGHT_MODULE_STEER_ENCODER,
@@ -163,30 +164,31 @@ public class DrivetrainSubsystem extends SubsystemBase {
    */
   public void zeroGyroscope() {
     // FIXME Remove if you are using a Pigeon
-    m_pigeon.setFusedHeading(0.0);
+//     m_pigeon.setFusedHeading(0.0);
 
     // FIXME Uncomment if you are using a NavX
-//    m_navx.zeroYaw();
+   m_navx.zeroYaw();
   }
 
   public Rotation2d getGyroscopeRotation() {
     // FIXME Remove if you are using a Pigeon
-    return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
+   // return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
 
     // FIXME Uncomment if you are using a NavX
-//    if (m_navx.isMagnetometerCalibrated()) {
-//      // We will only get valid fused headings if the magnetometer is calibrated
-//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-//    }
+    if (m_navx.isMagnetometerCalibrated()) {
+     // We will only get valid fused headings if the magnetometer is calibrated
+      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
+    }
 //
 //    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-//    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
-
+//Not settings for driving
   public void drive(ChassisSpeeds chassisSpeeds) {
     m_chassisSpeeds = chassisSpeeds;
   }
 
+//Settings for driving
   @Override
   public void periodic() {
     SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
